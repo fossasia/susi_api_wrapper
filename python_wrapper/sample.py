@@ -1,4 +1,4 @@
-import susi_python as susi
+from python_wrapper import susi_python as susi
 
 '''
 A sample application demonstrating use of Wrapper

@@ -1,5 +1,5 @@
-import requests
 import json
+import requests
 
 from susi_python.models import Answer, Datum, Metadata, Action, Session, Identity, QueryResponse, LoginResponse, \
     ForgotPasswordResponse
