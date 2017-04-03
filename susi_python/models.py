@@ -1,4 +1,4 @@
-class Response:
+class QueryResponse:
     def __init__(self, json, answer, session):
         self.query = json['query']
         self.count = json['count']
@@ -7,6 +7,25 @@ class Response:
         self.answer_time = json['answer_time']
         self.session = session
         self.answer = answer
+
+
+class LoginResponse:
+    def __init__(self, json, session):
+        self.message = json['message']
+        self.session = session
+        self.valid_seconds = json['valid_seconds']
+        self.access_token = json['access_token']
+
+
+class SignUpResponse:
+    def __init__(self, json, session):
+        self.session = session
+        self.message = json['message']
+
+
+class ForgotPasswordResponse:
+    def __init__(self, json):
+        self.message = json['message']
 
 
 class Answer:
