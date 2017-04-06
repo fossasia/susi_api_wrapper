@@ -4,6 +4,8 @@ import requests
 from susi_python.models import Answer, Datum, Metadata, Action, Session, Identity, QueryResponse, LoginResponse, \
     ForgotPasswordResponse
 
+from python_wrapper.susi_python.models import SignUpResponse
+
 
 def query(query_string):
     params = {
@@ -18,13 +20,22 @@ def ask(query_string):
     return response.answer.actions[0].expression
 
 
-def sign_up(email, password):
+def sign_in(email, password):
     params = {
         'login': email,
         'password': password
     }
     api_response = requests.get('https://api.asksusi.com/aaa/login.json?type=access-token', params)
     return api_response.json(cls=LoginResponseDecoder)
+
+
+def sign_up(email, password):
+    params = {
+        'signup': email,
+        'password': password
+    }
+    api_response = requests.get('https://api.asksusi.com/aaa/signup.json', params)
+    return api_response.json(cls=SignUpResponseDecoder)
 
 
 def forgot_password(email):
@@ -61,7 +72,8 @@ class LoginResponseDecoder(json.JSONDecoder):
     def decode(self, raw_json):
         json_object = super().decode(raw_json)
         identity_json = json_object['session']['identity']
-        session = Session(identity_json)
+        identity = Identity(identity_json)
+        session = Session(identity)
         return LoginResponse(json_object, session)
 
 
@@ -69,3 +81,12 @@ class ForgotPasswordDecoder(json.JSONDecoder):
     def decode(self, raw_json):
         json_object = super().decode(raw_json)
         return ForgotPasswordResponse(json_object)
+
+
+class SignUpResponseDecoder(json.JSONDecoder):
+    def decode(self, raw_json):
+        json_object = super().decode(raw_json)
+        identity_json = json_object['session']['identity']
+        identity = Identity(identity_json)
+        session = Session(identity)
+        return SignUpResponse(json_object, session)
