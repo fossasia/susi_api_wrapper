@@ -4,7 +4,7 @@ import requests
 from susi_python.models import Answer, Datum, Metadata, Action, Session, Identity, QueryResponse, LoginResponse, \
     ForgotPasswordResponse
 
-from python_wrapper.susi_python.models import SignUpResponse
+from susi_python.models import SignUpResponse
 
 
 def query(query_string):
