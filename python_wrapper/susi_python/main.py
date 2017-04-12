@@ -2,9 +2,7 @@ import json
 import requests
 
 from susi_python.models import Answer, Datum, Metadata, Action, Session, Identity, QueryResponse, LoginResponse, \
-    ForgotPasswordResponse
-
-from susi_python.models import SignUpResponse
+    ForgotPasswordResponse, SignUpResponse
 
 
 def query(query_string):
