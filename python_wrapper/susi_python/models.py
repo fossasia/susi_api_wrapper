@@ -63,9 +63,10 @@ class Datum:
         # self.intent_original = json['intent_original']
         # self.intent_canonical = json['intent_canonical']
         # self.timezoneOffset = json['timezoneOffset']
-        #
-        self.answer = json['answer']
-        self.query = json['query']
+        if 'answer' in json:
+            self.answer = json['answer']
+        if 'query' in json:
+            self.query = json['query']
 
     def __repr__(self):
         return 'Datum: (query = %s, answer = %s)' % (self.query,self.answer)
