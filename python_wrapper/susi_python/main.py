@@ -4,7 +4,7 @@ import requests
 from susi_python.models import Answer, Datum, Metadata, Action, Session, Identity, QueryResponse, LoginResponse, \
     ForgotPasswordResponse, SignUpResponse
 
-api_endpoint = 'https://api.susi.ai'
+api_endpoint = 'http://api.susi.ai'
 
 
 def use_api_endpoint(url):
@@ -23,8 +23,10 @@ def query(query_string):
 
 def ask(query_string):
     response = query(query_string)
-    return response.answer.actions[0].expression
-
+    try:
+        return response.answer.actions[0].expression
+    except:
+        return "There is a problem. Try again in a little bit."
 
 def sign_in(email, password):
     params = {
