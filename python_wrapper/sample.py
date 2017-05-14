@@ -47,10 +47,10 @@ def sign_up(email, password):
 
 
 # To sign up a user by email and password
-#sign_up('EMAIL_HERE', 'PASSWORD_HERE')
+# sign_up('EMAIL_HERE', 'PASSWORD_HERE')
 
 # To sign in a user by email and password
-#sign_in('EMAIL_HERE', 'PASSWORD_HERE')
+# sign_in('EMAIL_HERE', 'PASSWORD_HERE')
 
 
 '''
