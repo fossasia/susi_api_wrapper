@@ -1,4 +1,4 @@
-from python_wrapper import susi_python as susi
+import susi_python as susi
 
 '''
 A sample application demonstrating use of Wrapper
@@ -47,10 +47,10 @@ def sign_up(email, password):
 
 
 # To sign up a user by email and password
-sign_up('EMAIL_HERE', 'PASSWORD_HERE')
+#sign_up('EMAIL_HERE', 'PASSWORD_HERE')
 
 # To sign in a user by email and password
-sign_in('EMAIL_HERE', 'PASSWORD_HERE')
+#sign_in('EMAIL_HERE', 'PASSWORD_HERE')
 
 
 '''
