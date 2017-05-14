@@ -1,5 +1,7 @@
 # Wrappers for Susi AI REST API
 
+[![Build Status](https://travis-ci.org/fossasia/susi_api_wrapper.svg?branch=master)](https://travis-ci.org/fossasia/susi_api_wrapper)
+
 This repository contains the wrappers for using Susi AI REST api in multiple languages
 for easy access by the developers who wish to develop their application utilizing Susi AI
 intelligence.
