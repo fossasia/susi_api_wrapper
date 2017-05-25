@@ -67,4 +67,15 @@ while True:
     print("You: ", end='')
     input_query = str(input())
     reply = susi.ask(input_query)
-    print('Susi:' + reply)
+    if 'answer' in reply.keys():
+        print('Susi:' + reply['answer'])
+    if 'table' in reply.keys():
+        table = reply['table']
+        for h in table.head:
+            print('%s\t' % h, end='')
+        print()
+        for datum in table.data:
+            for value in datum:
+                print('%s\t' % value, end='')
+            print()
+
