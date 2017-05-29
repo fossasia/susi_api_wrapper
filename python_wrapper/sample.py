@@ -54,6 +54,12 @@ def sign_up(email, password):
 
 
 '''
+Use a custom api endpoint
+'''
+
+# susi.use_api_endpoint('<ADDRESS>')
+
+'''
 Chat Example
 '''
 

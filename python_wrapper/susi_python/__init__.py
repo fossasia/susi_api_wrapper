@@ -1,3 +1,4 @@
+from .main import use_api_endpoint
 from .main import query
 from .main import ask
 from .main import sign_in
