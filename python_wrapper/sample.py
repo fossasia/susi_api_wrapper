@@ -46,6 +46,12 @@ def sign_up(email, password):
     print_session_info(response.session)
 
 
+def get_old_conversations():
+    response = susi.get_previous_responses()
+    print(response)
+    # handle response
+
+
 # To sign up a user by email and password
 # sign_up('EMAIL_HERE', 'PASSWORD_HERE')
 
@@ -60,8 +66,15 @@ Use a custom api endpoint
 # susi.use_api_endpoint('<ADDRESS>')
 
 '''
+handle previous conversations
+'''
+
+# get_old_conversations()
+
+'''
 Chat Example
 '''
+
 
 while True:
     print("You: ", end='')

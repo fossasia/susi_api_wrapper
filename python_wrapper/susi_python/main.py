@@ -66,6 +66,12 @@ def forgot_password(email):
     return api_response.json(cls=ForgotPasswordDecoder)
 
 
+def get_previous_responses():
+    memory_url = api_endpoint + '/susi/memory.json'
+    api_response = requests.get(memory_url)
+    return api_response.json(cls=MemoryResponseDecorder)
+
+
 def get_action(jsn):
     if jsn['type'] == 'answer':
         return AnswerAction(jsn['expression'])
@@ -75,26 +81,45 @@ def get_action(jsn):
         return UnknownAction()
 
 
-class SusiResponseDecoder(json.JSONDecoder):
-    def decode(self, raw_json):
-        json_object = super().decode(raw_json)
-        ans = json_object['answers'][0]
 
-        data = [Datum(jsn)
-                for jsn in ans['data']]
+def generate_query_response(json_object):
+    ans = json_object['answers'][0]
 
-        metadata = Metadata(ans['metadata'])
+    data = [Datum(jsn)
+            for jsn in ans['data']]
 
-        actions = [get_action(jsn)
-                   for jsn in ans['actions']]
+    metadata = Metadata(ans['metadata'])
 
-        answer = Answer(data, metadata, actions)
+    actions = [get_action(jsn)
+               for jsn in ans['actions']]
 
+    answer = Answer(data, metadata, actions)
+
+    try:
         identity_json = json_object['session']['identity']
         identity = Identity(identity_json)
         session = Session(identity)
+    except KeyError:
+        session = None
 
-        return QueryResponse(json_object, answer, session)
+    return QueryResponse(json_object, answer, session)
+
+
+class MemoryResponseDecorder(json.JSONDecoder):
+    def decode(self, raw_json):
+        json_object = super().decode(raw_json)
+        cognitions = json_object['cognitions']
+
+        susi_responses = []
+        for cognition in cognitions:
+            susi_responses.append(generate_query_response(cognition))
+
+        return susi_responses
+
+class SusiResponseDecoder(json.JSONDecoder):
+    def decode(self, raw_json):
+        json_object = super().decode(raw_json)
+        return generate_query_response(json_object)
 
 
 class LoginResponseDecoder(json.JSONDecoder):
