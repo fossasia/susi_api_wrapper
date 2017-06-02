@@ -41,7 +41,7 @@ class ForgotPasswordResponse:
         self.message = json['message']
 
     def __repr__(self):
-        return 'ForgotPasswordResponse: (message = %s)' % (self.message)
+        return 'ForgotPasswordResponse: (message = %s)' % self.message
 
 
 class Answer:
@@ -57,19 +57,11 @@ class Answer:
 
 class Datum:
     def __init__(self, json):
-        #
-        # self.zero = json['0']
-        # self.one = json['1']
-        # self.intent_original = json['intent_original']
-        # self.intent_canonical = json['intent_canonical']
-        # self.timezoneOffset = json['timezoneOffset']
-        if 'answer' in json:
-            self.answer = json['answer']
-        if 'query' in json:
-            self.query = json['query']
+        # all properties of Datum are exposed as a dictionary rather than by field names
+        self.values = json
 
     def __repr__(self):
-        return 'Datum: (query = %s, answer = %s)' % (self.query,self.answer)
+        return 'Datum: (values = %s)' % self.values
 
 
 class Metadata:
@@ -80,15 +72,26 @@ class Metadata:
         return 'Metadata: (count = %s)' % self.count
 
 
-class Action:
-    def __init__(self, json):
-        if 'type' in json:
-            self.type = json['type']
-        if 'expression' in json:
-            self.expression = json['expression']
+class BaseAction:
+    def __init__(self):
+        pass
 
-    def __repr__(self):
-        return 'Action: (type = %s, expression = %s)' % (self.type, self.expression)
+class UnknownAction(BaseAction):
+    def __init__(self):
+        super().__init__()
+
+
+class AnswerAction(BaseAction):
+    def __init__(self, expression):
+        super().__init__()
+        self.expression = expression
+
+
+class TableAction(BaseAction):
+    def __init__(self, columns):
+        super().__init__()
+        # columns is a dictionary containing list of names of column to be displayed on client.
+        self.columns = columns
 
 
 class Session:
@@ -108,3 +111,17 @@ class Identity:
     def __repr__(self):
         return 'Identity: (name = %s, type = %s, anonymous = %s)' % \
                (self.name, self.type, self.anonymous)
+
+
+class Table:
+    def __init__(self, columns, data):
+        self.head = list(columns.values())
+
+        table_data = []
+        for datum in data:
+            table_datum = []
+            for key in columns.keys():
+                table_datum.append(datum.values[key])
+            table_data.append(table_datum)
+
+        self.data = table_data

@@ -1,8 +1,8 @@
 import json
 import requests
 
-from susi_python.models import Answer, Datum, Metadata, Action, Session, Identity, QueryResponse, LoginResponse, \
-    ForgotPasswordResponse, SignUpResponse
+from susi_python.models import Answer, Datum, Metadata, Session, Identity, QueryResponse, LoginResponse, \
+    ForgotPasswordResponse, SignUpResponse, AnswerAction, TableAction, UnknownAction, Table
 
 api_endpoint = 'http://api.susi.ai'
 
@@ -23,10 +23,19 @@ def query(query_string):
 
 def ask(query_string):
     response = query(query_string)
-    try:
-        return response.answer.actions[0].expression
-    except:
-        return "There is a problem. Try again in a little bit."
+
+    result = dict()
+    actions = response.answer.actions
+    data = response.answer.data
+
+    for action in actions:
+        if isinstance(action, AnswerAction):
+            result['answer'] = action.expression
+        if isinstance(action, TableAction):
+            result['table'] = Table(action.columns, data)
+
+    return result
+
 
 def sign_in(email, password):
     params = {
@@ -57,6 +66,15 @@ def forgot_password(email):
     return api_response.json(cls=ForgotPasswordDecoder)
 
 
+def get_action(jsn):
+    if jsn['type'] == 'answer':
+        return AnswerAction(jsn['expression'])
+    elif jsn['type'] == 'table':
+        return TableAction(jsn['columns'])
+    else:
+        return UnknownAction()
+
+
 class SusiResponseDecoder(json.JSONDecoder):
     def decode(self, raw_json):
         json_object = super().decode(raw_json)
@@ -67,7 +85,7 @@ class SusiResponseDecoder(json.JSONDecoder):
 
         metadata = Metadata(ans['metadata'])
 
-        actions = [Action(jsn)
+        actions = [get_action(jsn)
                    for jsn in ans['actions']]
 
         answer = Answer(data, metadata, actions)
