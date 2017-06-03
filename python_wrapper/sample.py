@@ -78,4 +78,7 @@ while True:
             for value in datum:
                 print('%s\t' % value, end='')
             print()
+    if 'map' in reply.keys():
+        mapObject = reply['map']
+        print("Map can be viewed at %s", mapObject.openStreetMapLink)
 

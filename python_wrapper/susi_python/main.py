@@ -2,7 +2,8 @@ import json
 import requests
 
 from susi_python.models import Answer, Datum, Metadata, Session, Identity, QueryResponse, LoginResponse, \
-    ForgotPasswordResponse, SignUpResponse, AnswerAction, TableAction, UnknownAction, Table
+    ForgotPasswordResponse, SignUpResponse, AnswerAction, TableAction, UnknownAction, Table, MapAction, AnchorAction, \
+    Map
 
 api_endpoint = 'http://api.susi.ai'
 
@@ -31,8 +32,12 @@ def ask(query_string):
     for action in actions:
         if isinstance(action, AnswerAction):
             result['answer'] = action.expression
-        if isinstance(action, TableAction):
+        elif isinstance(action, TableAction):
             result['table'] = Table(action.columns, data)
+        elif isinstance(action, MapAction):
+            result['map'] = Map(action.longitude, action.latitude, action.zoom)
+        elif isinstance(action, AnchorAction):
+            result['anchor'] = action
 
     return result
 
@@ -71,6 +76,10 @@ def get_action(jsn):
         return AnswerAction(jsn['expression'])
     elif jsn['type'] == 'table':
         return TableAction(jsn['columns'])
+    elif jsn['type'] == 'map':
+        return MapAction(jsn['latitude'], jsn['longitude'], jsn['zoom'])
+    elif jsn['type'] == 'anchor':
+        return AnchorAction(jsn['link'], jsn['text'])
     else:
         return UnknownAction()
 

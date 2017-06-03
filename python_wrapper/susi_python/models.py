@@ -76,6 +76,7 @@ class BaseAction:
     def __init__(self):
         pass
 
+
 class UnknownAction(BaseAction):
     def __init__(self):
         super().__init__()
@@ -92,6 +93,21 @@ class TableAction(BaseAction):
         super().__init__()
         # columns is a dictionary containing list of names of column to be displayed on client.
         self.columns = columns
+
+
+class MapAction(BaseAction):
+    def __init__(self, latitude, longitude, zoom):
+        super().__init__()
+        self.latitude = latitude
+        self.longitude = longitude
+        self.zoom = zoom
+
+
+class AnchorAction(BaseAction):
+    def __init__(self, link, text):
+        super().__init__()
+        self.link = link
+        self.text = text
 
 
 class Session:
@@ -125,3 +141,12 @@ class Table:
             table_data.append(table_datum)
 
         self.data = table_data
+
+
+class Map:
+    def __init__(self, longitude, latitude, zoom):
+        self.longitude = longitude
+        self.latitude = latitude
+        self.zoom = zoom
+        self.openStreetMapLink = 'https://www.openstreetmap.org/#map=%s/%s/%s' % \
+                                 ( zoom, latitude, longitude )
