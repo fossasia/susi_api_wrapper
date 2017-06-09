@@ -1,7 +1,7 @@
 import json
 
 from susi_python.models import AnswerAction, TableAction, MapAction, AnchorAction, UnknownAction, Datum, Metadata, \
-    Answer, Identity, Session, QueryResponse, LoginResponse, ForgotPasswordResponse, SignUpResponse
+    Answer, Identity, Session, QueryResponse, LoginResponse, ForgotPasswordResponse, SignUpResponse, RssAction
 
 
 def get_action(jsn):
@@ -13,6 +13,8 @@ def get_action(jsn):
         return MapAction(jsn['latitude'], jsn['longitude'], jsn['zoom'])
     elif jsn['type'] == 'anchor':
         return AnchorAction(jsn['link'], jsn['text'])
+    elif jsn['type'] == 'rss':
+        return RssAction(jsn['count'],jsn['title'], jsn['description'], jsn['link'])
     else:
         return UnknownAction()
 
@@ -50,6 +52,7 @@ class MemoryResponseDecorder(json.JSONDecoder):
             susi_responses.append(generate_query_response(cognition))
 
         return susi_responses
+
 
 class SusiResponseDecoder(json.JSONDecoder):
     def decode(self, raw_json):

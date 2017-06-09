@@ -94,4 +94,8 @@ while True:
     if 'map' in reply.keys():
         mapObject = reply['map']
         print("Map can be viewed at %s", mapObject.openStreetMapLink)
+    if 'rss' in reply.keys():
+        rss = reply['rss']
+        for entity in rss:
+            print(f'title: {entity.title}\ndescription: {entity.description}\nlink:{entity.link}')
 
