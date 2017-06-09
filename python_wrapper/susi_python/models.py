@@ -110,6 +110,15 @@ class AnchorAction(BaseAction):
         self.text = text
 
 
+class RssAction(BaseAction):
+    def __init__(self, count, title, description, link):
+        super().__init__()
+        self.count = count
+        self.title = title
+        self.description = description
+        self.link = link
+
+
 class Session:
     def __init__(self, identity):
         self.identity = identity
@@ -150,3 +159,11 @@ class Map:
         self.zoom = zoom
         self.openStreetMapLink = 'https://www.openstreetmap.org/#map=%s/%s/%s' % \
                                  ( zoom, latitude, longitude )
+
+
+class RssEntity:
+    def __init__(self, title, description, link):
+        self.title = title
+        self.description = description
+        self.link = link
+

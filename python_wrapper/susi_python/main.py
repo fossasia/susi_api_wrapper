@@ -1,6 +1,6 @@
 import requests
 
-from susi_python.models import AnswerAction, TableAction, Table, MapAction, AnchorAction, Map
+from susi_python.models import AnswerAction, TableAction, Table, MapAction, AnchorAction, Map, RssAction, RssEntity
 from susi_python.response_decoders import MemoryResponseDecorder, ForgotPasswordDecoder, SignUpResponseDecoder, \
     LoginResponseDecoder, SusiResponseDecoder
 
@@ -37,8 +37,23 @@ def ask(query_string):
             result['map'] = Map(action.longitude, action.latitude, action.zoom)
         elif isinstance(action, AnchorAction):
             result['anchor'] = action
+        elif isinstance(action, RssAction):
+            result['rss'] = get_rss_entities(data)
 
     return result
+
+
+def get_rss_entities(data):
+    entities = []
+    for datum in data:
+        values = datum.values
+        entity = RssEntity(
+            title=values['title'],
+            description=values['description'],
+            link=values['link']
+        )
+        entities.append(entity)
+    return entities
 
 
 def sign_in(email, password):
