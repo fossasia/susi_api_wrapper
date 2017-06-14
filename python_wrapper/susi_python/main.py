@@ -1,4 +1,4 @@
-import requests
+import requests, json
 
 from susi_python.models import AnswerAction, TableAction, Table, MapAction, AnchorAction, Map, RssAction, RssEntity
 from susi_python.response_decoders import MemoryResponseDecorder, ForgotPasswordDecoder, SignUpResponseDecoder, \
@@ -21,9 +21,7 @@ def query(query_string):
     return api_response.json(cls=SusiResponseDecoder)
 
 
-def ask(query_string):
-    response = query(query_string)
-
+def generate_result(response):
     result = dict()
     actions = response.answer.actions
     data = response.answer.data
@@ -41,6 +39,16 @@ def ask(query_string):
             result['rss'] = get_rss_entities(data)
 
     return result
+
+
+def ask(query_string):
+    response = query(query_string)
+    return generate_result(response)
+
+
+def answer_from_json(json_response):
+    response = json.loads(json_response, cls=SusiResponseDecoder)
+    return generate_result(response)
 
 
 def get_rss_entities(data):
