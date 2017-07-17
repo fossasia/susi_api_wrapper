@@ -1,10 +1,11 @@
-import requests, json
+import json
 
-from susi_python.models import AnswerAction, TableAction, Table, MapAction, AnchorAction, Map, RssAction, RssEntity
-from susi_python.response_decoders import MemoryResponseDecorder, ForgotPasswordDecoder, SignUpResponseDecoder, \
-    LoginResponseDecoder, SusiResponseDecoder
+import requests
+
+from .response_parser import *
 
 api_endpoint = 'http://api.susi.ai'
+access_token = None
 
 
 def use_api_endpoint(url):
@@ -14,11 +15,16 @@ def use_api_endpoint(url):
 
 def query(query_string):
     params = {
-        'q': query_string
+        'q': query_string,
     }
+    if access_token is not None:
+        params['access_token'] = access_token
+
     chat_url = api_endpoint + "/susi/chat.json"
     api_response = requests.get(chat_url, params)
-    return api_response.json(cls=SusiResponseDecoder)
+    response_json = api_response.json()
+    parsed_res = get_query_response(response_json)
+    return parsed_res
 
 
 def generate_result(response):
@@ -47,8 +53,9 @@ def ask(query_string):
 
 
 def answer_from_json(json_response):
-    response = json.loads(json_response, cls=SusiResponseDecoder)
-    return generate_result(response)
+    response_dict = json.loads(json_response)
+    query_response = get_query_response(response_dict)
+    return generate_result(query_response)
 
 
 def get_rss_entities(data):
@@ -65,13 +72,21 @@ def get_rss_entities(data):
 
 
 def sign_in(email, password):
+    global access_token
     params = {
         'login': email,
         'password': password
     }
     sign_in_url = api_endpoint + '/aaa/login.json?type=access-token'
     api_response = requests.get(sign_in_url, params)
-    return api_response.json(cls=LoginResponseDecoder)
+
+    if api_response.status_code == 200:
+        response_dict = api_response.json()
+        print(response_dict)
+        parsed_response = get_sign_in_response(response_dict)
+        access_token = parsed_response.access_token
+    else:
+        access_token = None
 
 
 def sign_up(email, password):
@@ -81,7 +96,8 @@ def sign_up(email, password):
     }
     sign_up_url = api_endpoint + '/aaa/signup.json'
     api_response = requests.get(sign_up_url, params)
-    return api_response.json(cls=SignUpResponseDecoder)
+    parsed_dict = api_response.json()
+    return get_sign_up_response(parsed_dict)
 
 
 def forgot_password(email):
@@ -90,10 +106,12 @@ def forgot_password(email):
     }
     forgot_password_url = api_endpoint + '/aaa/recoverpassword.json'
     api_response = requests.get(forgot_password_url, params)
-    return api_response.json(cls=ForgotPasswordDecoder)
+    parsed_dict = api_response.json()
+    return get_forgot_password_response(parsed_dict)
 
 
 def get_previous_responses():
     memory_url = api_endpoint + '/susi/memory.json'
     api_response = requests.get(memory_url)
-    return api_response.json(cls=MemoryResponseDecorder)
+    parsed_dict = api_response.json()
+    return get_memory_responses(parsed_dict)
