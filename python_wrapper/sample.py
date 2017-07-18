@@ -10,40 +10,12 @@ Auth Examples
 '''
 
 
-def print_session_info(session):
-    identity = session.identity
-    print('name:' + identity.name)
-    print('anonymous:' + str(identity.anonymous))
-    print('type:' + identity.type)
-
-
-def sign_in(email, password):
-    response = susi.sign_in(email, password)
-
-    # message from server
-    message = response.message
-    print('Server''s Message:' + message)
-
-    # session info
-    session = response.session
-    print_session_info(session)
-
-    # access-token. Access token can be passed as parameter to queries to identify user
-    print('access token:' + response.access_token)
-
-    # valid_seconds. Specifies time in seconds for which token is valid
-    print('valid time:' + response.valid_seconds)
-
-
 def sign_up(email, password):
     response = susi.sign_up(email, password)
 
     # message from server
     message = response.message
     print('Server''s Message:' + message)
-
-    # session info
-    print_session_info(response.session)
 
 
 def get_old_conversations():
@@ -56,25 +28,21 @@ def get_old_conversations():
 # sign_up('EMAIL_HERE', 'PASSWORD_HERE')
 
 # To sign in a user by email and password
-# sign_in('EMAIL_HERE', 'PASSWORD_HERE')
+# susi.sign_in('clever@gmail.com', 'Clever123')
 
-
-'''
+"""
 Use a custom api endpoint
-'''
-
+"""
 # susi.use_api_endpoint('<ADDRESS>')
 
 '''
 handle previous conversations
 '''
-
 # get_old_conversations()
 
 '''
 Chat Example
 '''
-
 
 while True:
     print("You: ", end='')
@@ -86,16 +54,16 @@ while True:
         table = reply['table']
         for h in table.head:
             print('%s\t' % h, end='')
-        print()
-        for datum in table.data:
-            for value in datum:
-                print('%s\t' % value, end='')
             print()
-    if 'map' in reply.keys():
-        mapObject = reply['map']
-        print("Map can be viewed at %s", mapObject.openStreetMapLink)
-    if 'rss' in reply.keys():
-        rss = reply['rss']
-        for entity in rss:
-            print(f'title: {entity.title}\ndescription: {entity.description}\nlink:{entity.link}')
-
+            for datum in table.data:
+                for value in datum:
+                    print('%s\t' % value, end='')
+                    print()
+            if 'map' in reply.keys():
+                mapObject = reply['map']
+                print("Map can be viewed at %s", mapObject.openStreetMapLink)
+            if 'rss' in reply.keys():
+                rss = reply['rss']
+                for entity in rss:
+                    print('title: {0}\ndescription: {1}\nlink:{2}'.
+                          format(entity.title, entity.description, entity.link))

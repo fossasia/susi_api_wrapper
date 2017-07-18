@@ -158,7 +158,7 @@ class Map:
         self.latitude = latitude
         self.zoom = zoom
         self.openStreetMapLink = 'https://www.openstreetmap.org/#map=%s/%s/%s' % \
-                                 ( zoom, latitude, longitude )
+                                 (zoom, latitude, longitude)
 
 
 class RssEntity:
