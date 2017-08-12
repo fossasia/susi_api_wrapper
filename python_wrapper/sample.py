@@ -59,11 +59,11 @@ while True:
                 for value in datum:
                     print('%s\t' % value, end='')
                     print()
-            if 'map' in reply.keys():
-                mapObject = reply['map']
-                print("Map can be viewed at %s", mapObject.openStreetMapLink)
-            if 'rss' in reply.keys():
-                rss = reply['rss']
-                for entity in rss:
-                    print('title: {0}\ndescription: {1}\nlink:{2}'.
-                          format(entity.title, entity.description, entity.link))
+    if 'map' in reply.keys():
+        mapObject = reply['map']
+        print("Map can be viewed at %s", mapObject.openStreetMapLink)
+    if 'rss' in reply.keys():
+        rss = reply['rss']
+        for entity in rss['entities']:
+            print('title: {0}\ndescription: {1}\nlink:{2}'.
+                  format(entity.title, entity.description, entity.link))

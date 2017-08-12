@@ -2,7 +2,6 @@ from .models import *
 
 
 def get_action(jsn):
-    print(jsn)
     if jsn['type'] == 'answer':
         return AnswerAction(jsn['expression'])
     elif jsn['type'] == 'table':
