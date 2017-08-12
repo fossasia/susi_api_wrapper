@@ -42,7 +42,9 @@ def generate_result(response):
         elif isinstance(action, AnchorAction):
             result['anchor'] = action
         elif isinstance(action, RssAction):
-            result['rss'] = get_rss_entities(data)
+            entities = get_rss_entities(data)
+            count = action.count
+            result['rss'] = {'entities': entities, 'count': count}
 
     return result
 
@@ -82,7 +84,6 @@ def sign_in(email, password):
 
     if api_response.status_code == 200:
         response_dict = api_response.json()
-        print(response_dict)
         parsed_response = get_sign_in_response(response_dict)
         access_token = parsed_response.access_token
     else:
