@@ -1,11 +1,13 @@
 import json
 
 import requests
+import time
 
 from .response_parser import *
 
 api_endpoint = 'http://api.susi.ai'
 access_token = None
+location = {'latitude': None, 'longitude': None}
 
 
 def use_api_endpoint(url):
@@ -13,12 +15,23 @@ def use_api_endpoint(url):
     api_endpoint = url
 
 
+def update_location(latitude, longitude):
+    global location
+    location['latitude'] = latitude
+    location['longitude'] = longitude
+
+
 def query(query_string):
     params = {
         'q': query_string,
+        'timezoneOffset': int(time.timezone/60)
     }
     if access_token is not None:
         params['access_token'] = access_token
+
+    if location['latitude'] is not None and location['longitude'] is not None:
+        params['latitude'] = location['latitude']
+        params['longitude'] = location['longitude']
 
     chat_url = api_endpoint + "/susi/chat.json"
     api_response = requests.get(chat_url, params)
