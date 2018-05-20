@@ -5,9 +5,27 @@ import time
 
 from .response_parser import *
 
-api_endpoint = 'http://api.susi.ai'
+api_endpoint = 'https://api.susi.ai'
 access_token = None
 location = {'latitude': None, 'longitude': None}
+
+
+def check_local_server():
+    test_params = {
+        'q': 'Hello',
+        'timezoneOffset': int(time.timezone / 60)
+    }
+    try:
+        chat_url = 'http://localhost:4000/susi/chat.json'
+        if (requests.get(chat_url, test_params)):
+            print('connected to local server')
+            global api_endpoint
+            api_endpoint = 'http://localhost:4000'
+    except requests.exceptions.ConnectionError:
+        print('local server is down')
+
+
+check_local_server()
 
 
 def use_api_endpoint(url):
