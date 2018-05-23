@@ -1,4 +1,5 @@
 import json
+import os
 
 import requests
 import time
@@ -72,7 +73,11 @@ def generate_result(response):
             result['map'] = Map(action.longitude, action.latitude, action.zoom)
         elif isinstance(action, AnchorAction):
             result['anchor'] = action
-        elif isinstance(action, RssAction):
+        elif isinstance(action, VideoAction):
+            result['identifier'] = action.identifier
+            audio_url = result['identifier']    #bandit -s B605
+            os.system('tizonia --youtube-audio-stream '+ audio_url) #nosec #pylint-disable type: ignore
+        elif isinstance(action, RssAction): #pylint-enable
             entities = get_rss_entities(data)
             count = action.count
             result['rss'] = {'entities': entities, 'count': count}

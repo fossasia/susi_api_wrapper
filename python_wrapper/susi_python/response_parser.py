@@ -12,6 +12,8 @@ def get_action(jsn):
         return AnchorAction(jsn['link'], jsn['text'])
     elif jsn['type'] == 'rss':
         return RssAction(jsn['count'], jsn['title'], jsn['description'], jsn['link'])
+    elif jsn['type'] == 'video_play':
+        return VideoAction(jsn['identifier'], jsn['identifier_type'])
     else:
         return UnknownAction()
 
