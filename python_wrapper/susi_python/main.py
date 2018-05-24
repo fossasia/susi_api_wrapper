@@ -51,8 +51,18 @@ def query(query_string):
         params['latitude'] = location['latitude']
         params['longitude'] = location['longitude']
 
+    global api_endpoint
     chat_url = api_endpoint + "/susi/chat.json"
-    api_response = requests.get(chat_url, params)
+    try:
+        api_response = requests.get(chat_url, params)
+    except requests.exceptions.ConnectionError:
+        if api_endpoint == 'http://localhost:4000' | api_endpoint == 'https://localhost:4000':
+            api_endpoint = 'https://api.susi.ai'
+            api_response = requests.get(chat_url, params)
+        elif api_endpoint == 'http://api.susi.ai' | api_endpoint == 'https://api.susi.ai':
+            api_endpoint = 'http://localhost:4000'
+            api_response = requests.get(chat_url, params)
+
     response_json = api_response.json()
     parsed_res = get_query_response(response_json)
     return parsed_res
