@@ -1,5 +1,5 @@
 class QueryResponse:
-    def __init__(self, json, answer, session):
+    def __init__(self,answer, json, session):
         self.query = json['query']
         self.count = json['count']
         self.client_id = json['client_id']

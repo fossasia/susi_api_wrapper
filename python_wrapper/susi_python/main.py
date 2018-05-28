@@ -1,6 +1,4 @@
 import json
-import os
-
 import requests
 import time
 
@@ -52,8 +50,18 @@ def query(query_string):
         params['latitude'] = location['latitude']
         params['longitude'] = location['longitude']
 
+    global api_endpoint
     chat_url = api_endpoint + "/susi/chat.json"
-    api_response = requests.get(chat_url, params)
+    try:
+        api_response = requests.get(chat_url, params)
+    except requests.exceptions.ConnectionError:
+        if api_endpoint == 'http://localhost:4000' | api_endpoint == 'https://localhost:4000':
+            api_endpoint = 'https://api.susi.ai'
+            api_response = requests.get(chat_url, params)
+        elif api_endpoint == 'http://api.susi.ai' | api_endpoint == 'https://api.susi.ai':
+            api_endpoint = 'http://localhost:4000'
+            api_response = requests.get(chat_url, params)
+
     response_json = api_response.json()
     parsed_res = get_query_response(response_json)
     return parsed_res
@@ -63,9 +71,12 @@ def generate_result(response):
     result = dict()
     actions = response.answer.actions
     data = response.answer.data
+    
+    print(actions)
 
     for action in actions:
         if isinstance(action, AnswerAction):
+            print(action)
             result['answer'] = action.expression
         elif isinstance(action, TableAction):
             result['table'] = Table(action.columns, data)
@@ -74,13 +85,12 @@ def generate_result(response):
         elif isinstance(action, AnchorAction):
             result['anchor'] = action
         elif isinstance(action, VideoAction):
-            result['identifier'] = action.identifier
-            audio_url = result['identifier']    #bandit -s B605
-            os.system('tizonia --youtube-audio-stream '+ audio_url) #nosec #pylint-disable type: ignore
+            result['identifier'] = 'ytd-' + action.identifier
         elif isinstance(action, RssAction): #pylint-enable
             entities = get_rss_entities(data)
             count = action.count
             result['rss'] = {'entities': entities, 'count': count}
+        print(actions,action)
 
     return result
 
