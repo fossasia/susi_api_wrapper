@@ -109,6 +109,11 @@ class AnchorAction(BaseAction):
         self.link = link
         self.text = text
 
+class VideoAction(BaseAction):
+    def __init__(self, identifier , identifier_type):
+        super().__init__()
+        self.identifier = identifier
+        self.identifier_type = identifier_type
 
 class RssAction(BaseAction):
     def __init__(self, count, title, description, link):
