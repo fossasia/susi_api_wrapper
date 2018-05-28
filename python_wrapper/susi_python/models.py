@@ -123,6 +123,9 @@ class RssAction(BaseAction):
         self.description = description
         self.link = link
 
+class StopAction(BaseAction):
+    def __init__(self):
+        super().__init__()
 
 class Session:
     def __init__(self, identity):
