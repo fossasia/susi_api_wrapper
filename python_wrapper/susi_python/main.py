@@ -3,10 +3,12 @@ import os
 
 import requests
 import time
+import os
 
 from .response_parser import *
 
-api_endpoint = 'https://api.susi.ai'
+api_endpoint = 'http://api.susi.ai'
+
 access_token = None
 location = {'latitude': None, 'longitude': None}
 
@@ -77,7 +79,11 @@ def generate_result(response):
     for action in actions:
         if isinstance(action, AnswerAction):
             result['answer'] = action.expression
-        elif isinstance(action, TableAction):
+        elif isinstance(action, AudioAction):
+                result['identifier'] = action.identifier
+                audio_url = result['identifier']  # bandit -s B605
+                os.system('play ' + audio_url[6:])  # nosec #pylint-disable type: ignore
+        elif isinstance(action, TableAction):  # pylint-enable
             result['table'] = Table(action.columns, data)
         elif isinstance(action, MapAction):
             result['map'] = Map(action.longitude, action.latitude, action.zoom)
