@@ -2,10 +2,12 @@ import json
 
 import requests
 import time
+import os
 
 from .response_parser import *
 
-api_endpoint = 'https://api.susi.ai'
+api_endpoint = 'http://api.susi.ai'
+
 access_token = None
 location = {'latitude': None, 'longitude': None}
 
@@ -72,22 +74,30 @@ def generate_result(response):
     result = dict()
     actions = response.answer.actions
     data = response.answer.data
+    
+    print(actions)
 
     for action in actions:
         if isinstance(action, AnswerAction):
+            print(action)
             result['answer'] = action.expression
-        elif isinstance(action, TableAction):
+        elif isinstance(action, AudioAction):
+                result['identifier'] = action.identifier
+                audio_url = result['identifier']  # bandit -s B605
+                os.system('play ' + audio_url[6:])  # nosec #pylint-disable type: ignore
+        elif isinstance(action, TableAction):  # pylint-enable
             result['table'] = Table(action.columns, data)
         elif isinstance(action, MapAction):
             result['map'] = Map(action.longitude, action.latitude, action.zoom)
         elif isinstance(action, AnchorAction):
             result['anchor'] = action
         elif isinstance(action, VideoAction):
-            result['identifier'] = action.identifier
+            result['identifier'] = 'ytd-' + action.identifier
         elif isinstance(action, RssAction): #pylint-enable
             entities = get_rss_entities(data)
             count = action.count
             result['rss'] = {'entities': entities, 'count': count}
+        print(actions,action)
 
     return result
 

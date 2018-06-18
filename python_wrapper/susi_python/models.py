@@ -1,5 +1,5 @@
 class QueryResponse:
-    def __init__(self, json, answer, session):
+    def __init__(self,answer, json, session):
         self.query = json['query']
         self.count = json['count']
         self.client_id = json['client_id']
@@ -122,6 +122,13 @@ class RssAction(BaseAction):
         self.title = title
         self.description = description
         self.link = link
+
+class AudioAction(BaseAction):
+    def __init__(self, identifier , identifier_type):
+        super().__init__()
+        self.identifier = identifier
+        self.identifier_type = identifier_type
+
 
 
 class Session:
