@@ -1,6 +1,4 @@
 import json
-import os
-
 import requests
 import time
 import os
@@ -75,9 +73,12 @@ def generate_result(response):
     result = dict()
     actions = response.answer.actions
     data = response.answer.data
+    
+    print(actions)
 
     for action in actions:
         if isinstance(action, AnswerAction):
+            print(action)
             result['answer'] = action.expression
         elif isinstance(action, AudioAction):
                 result['identifier'] = action.identifier
@@ -90,13 +91,12 @@ def generate_result(response):
         elif isinstance(action, AnchorAction):
             result['anchor'] = action
         elif isinstance(action, VideoAction):
-            result['identifier'] = action.identifier
-            audio_url = result['identifier']    #bandit -s B605
-            os.system('tizonia --youtube-audio-stream '+ audio_url) #nosec #pylint-disable type: ignore
+            result['identifier'] = 'ytd-' + action.identifier
         elif isinstance(action, RssAction): #pylint-enable
             entities = get_rss_entities(data)
             count = action.count
             result['rss'] = {'entities': entities, 'count': count}
+        print(actions,action)
 
     return result
 
