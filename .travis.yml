@@ -3,6 +3,7 @@ python:
   - "3.6"
 install:
   - pip install -U pytest
+  - pip install sox
   - pip install -r python_wrapper/requirements.txt
 script:
   # for Python API wrapper
