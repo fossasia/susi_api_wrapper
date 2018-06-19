@@ -1,4 +1,5 @@
 import susi_python as susi
+import os
 
 '''
 A sample application demonstrating use of Wrapper
@@ -48,8 +49,18 @@ while True:
     print("You: ", end='')
     input_query = str(input())
     reply = susi.ask(input_query)
+    print(reply)
     if 'answer' in reply.keys():
         print('Susi:' + reply['answer'])
+    if 'identifier' in reply.keys():
+        classifier = reply['identifier']
+        print(classifier[:3])
+        if classifier[:3] == 'ytd':
+            audio_url = result['identifier']    #bandit -s B605
+            os.system('tizonia --youtube-audio-stream '+ audio_url) #nosec #pylint-disable type: ignore
+        else :
+            audio_url = reply['identifier']  # bandit -s B605
+            os.system('play ' + audio_url[6:])  # nosec #pylint-disable type: ignore
     if 'table' in reply.keys():
         table = reply['table']
         for h in table.head:

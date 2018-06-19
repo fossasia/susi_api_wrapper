@@ -1,15 +1,16 @@
 import json
-import os
 
 import requests
 import time
+import os
 
 from .response_parser import *
 from uuid import getnode as get_mac
 
-api_endpoint = 'https://api.susi.ai'
+api_endpoint = 'http://api.susi.ai'
+
 access_token = None
-location = {'latitude': None, 'longitude': None}
+location = {'latitude': None, 'longitude': None, 'country_name': None, 'country_code': None}
 
 
 def check_local_server():
@@ -35,16 +36,19 @@ def use_api_endpoint(url):
     api_endpoint = url
 
 
-def update_location(latitude, longitude):
+def update_location(latitude, longitude, country_name, country_code):
     global location
     location['latitude'] = latitude
     location['longitude'] = longitude
+    location['country_name'] = country_name
+    location['country_code'] = country_code
 
 
 def query(query_string):
     params = {
         'q': query_string,
-        'timezoneOffset': int(time.timezone/60)
+        'timezoneOffset': int(time.timezone/60),
+        'device_type': 'Smart Speaker'
     }
     if access_token is not None:
         params['access_token'] = access_token
@@ -52,6 +56,10 @@ def query(query_string):
     if location['latitude'] is not None and location['longitude'] is not None:
         params['latitude'] = location['latitude']
         params['longitude'] = location['longitude']
+
+    if location['country_name'] is not None and location['country_code'] is not None:
+        params['country_name'] = location['country_name']
+        params['country_code'] = location['country_code']
 
     global api_endpoint
     chat_url = api_endpoint + "/susi/chat.json"
@@ -74,20 +82,25 @@ def generate_result(response):
     result = dict()
     actions = response.answer.actions
     data = response.answer.data
+    
+    print(actions)
 
     for action in actions:
         if isinstance(action, AnswerAction):
+            print(action)
             result['answer'] = action.expression
-        elif isinstance(action, TableAction):
+        elif isinstance(action, AudioAction):
+                result['identifier'] = action.identifier
+                audio_url = result['identifier']  # bandit -s B605
+                os.system('play ' + audio_url[6:])  # nosec #pylint-disable type: ignore
+        elif isinstance(action, TableAction):  # pylint-enable
             result['table'] = Table(action.columns, data)
         elif isinstance(action, MapAction):
             result['map'] = Map(action.longitude, action.latitude, action.zoom)
         elif isinstance(action, AnchorAction):
             result['anchor'] = action
         elif isinstance(action, VideoAction):
-            result['identifier'] = action.identifier
-            audio_url = result['identifier']    #bandit -s B605
-            os.system('tizonia --youtube-audio-stream '+ audio_url) #nosec #pylint-disable type: ignore
+            result['identifier'] = 'ytd-' + action.identifier
         elif isinstance(action, RssAction): #pylint-enable
             entities = get_rss_entities(data)
             count = action.count
