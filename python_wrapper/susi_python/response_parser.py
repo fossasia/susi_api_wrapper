@@ -16,6 +16,8 @@ def get_action(jsn):
         return VideoAction(jsn['identifier'], jsn['identifier_type'])
     elif jsn['type'] == 'stop':
         return StopAction()
+    elif jsn['type'] == 'audio_play':
+        return AudioAction(jsn['identifier'], jsn['identifier_type'])
     else:
         return UnknownAction()
 
@@ -30,8 +32,8 @@ def get_query_response(parsed_dict):
 
     actions = [get_action(jsn)
                for jsn in ans['actions']]
-
-    answer = Answer(data, metadata, actions)
+    print(actions[::-1])
+    answer = Answer(data, metadata, actions[::-1])
 
     try:
         identity_json = parsed_dict['session']['identity']
@@ -40,7 +42,7 @@ def get_query_response(parsed_dict):
     except KeyError:
         session = None
 
-    return QueryResponse(parsed_dict, answer, session)
+    return QueryResponse(answer,parsed_dict, session)
 
 
 def get_sign_in_response(parsed_dict):
