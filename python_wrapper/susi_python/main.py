@@ -5,6 +5,7 @@ import time
 import os
 
 from .response_parser import *
+from uuid import getnode as get_mac
 
 api_endpoint = 'http://api.susi.ai'
 
@@ -133,6 +134,45 @@ def get_rss_entities(data):
         entities.append(entity)
     return entities
 
+def add_device(access_token):
+
+    get_device_info = api_endpoint + '/aaa/listUserSettings.json?'
+    add_device_url = api_endpoint + '/aaa/addNewDevice.json?'
+    mac = get_mac()
+    macid = ':'.join(("%012X"%mac)[i:i+2] for i in range(0,12,2))
+
+    param1 = {
+        'access_token':access_token
+    }
+
+    # print(access_token)
+
+    if access_token is not None:
+        device_info_response = requests.get(get_device_info,param1)
+        device_info = device_info_response.json()
+
+    # print(device_info)
+
+    if device_info is not None:
+        device = device_info['devices'] # list of existing mac ids
+        print(device)
+        session = device_info['session'] # session info
+        identity = session['identity']
+        name = identity['name']
+        params2 = {
+        'macid': macid,
+        'name': name,
+        'device': 'Smart Speaker',
+        'access_token': access_token
+        }
+
+        for dev in device:
+            if dev == macid:
+                print('Device already configured')
+                return
+            else :
+                adding_device = requests.post(add_device_url, params2)
+                print(adding_device.url)
 
 def sign_in(email, password):
     global access_token
@@ -147,9 +187,11 @@ def sign_in(email, password):
         response_dict = api_response.json()
         parsed_response = get_sign_in_response(response_dict)
         access_token = parsed_response.access_token
+        # print(access_token)
+        if access_token is not None:
+            add_device(access_token)
     else:
         access_token = None
-
 
 def sign_up(email, password):
     params = {
