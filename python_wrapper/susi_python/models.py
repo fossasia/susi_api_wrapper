@@ -123,12 +123,15 @@ class RssAction(BaseAction):
         self.description = description
         self.link = link
 
+class StopAction(BaseAction):
+    def __init__(self):
+        super().__init__()
+
 class AudioAction(BaseAction):
     def __init__(self, identifier , identifier_type):
         super().__init__()
         self.identifier = identifier
         self.identifier_type = identifier_type
-
 
 
 class Session:

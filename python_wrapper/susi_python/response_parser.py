@@ -14,6 +14,8 @@ def get_action(jsn):
         return RssAction(jsn['count'], jsn['title'], jsn['description'], jsn['link'])
     elif jsn['type'] == 'video_play':
         return VideoAction(jsn['identifier'], jsn['identifier_type'])
+    elif jsn['type'] == 'stop':
+        return StopAction()
     elif jsn['type'] == 'audio_play':
         return AudioAction(jsn['identifier'], jsn['identifier_type'])
     else:
