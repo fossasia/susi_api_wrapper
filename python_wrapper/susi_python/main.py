@@ -104,7 +104,8 @@ def generate_result(response):
             entities = get_rss_entities(data)
             count = action.count
             result['rss'] = {'entities': entities, 'count': count}
-        print(actions,action)
+        elif isinstance(action, StopAction):
+            break
 
     return result
 
