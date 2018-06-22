@@ -168,10 +168,13 @@ class Table:
 
 
 class Map:
-    def __init__(self, longitude, latitude, zoom):
+    def __init__(self, longitude, latitude, zoom=None):
         self.longitude = longitude
         self.latitude = latitude
-        self.zoom = zoom
+        if(zoom is None):
+            self.zoom = 13
+        else:
+            self.zoom = zoom
         self.openStreetMapLink = 'https://www.openstreetmap.org/#map=%s/%s/%s' % \
                                  (zoom, latitude, longitude)
 
