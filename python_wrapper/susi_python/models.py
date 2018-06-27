@@ -1,5 +1,5 @@
 class QueryResponse:
-    def __init__(self, json, answer, session):
+    def __init__(self,answer, json, session):
         self.query = json['query']
         self.count = json['count']
         self.client_id = json['client_id']
@@ -123,6 +123,10 @@ class RssAction(BaseAction):
         self.description = description
         self.link = link
 
+class StopAction(BaseAction):
+    def __init__(self):
+        super().__init__()
+
 class AudioAction(BaseAction):
     def __init__(self, identifier , identifier_type):
         super().__init__()
@@ -168,10 +172,13 @@ class Table:
 
 
 class Map:
-    def __init__(self, longitude, latitude, zoom):
+    def __init__(self, longitude, latitude, zoom=None):
         self.longitude = longitude
         self.latitude = latitude
-        self.zoom = zoom
+        if(zoom is None):
+            self.zoom = 13
+        else:
+            self.zoom = zoom
         self.openStreetMapLink = 'https://www.openstreetmap.org/#map=%s/%s/%s' % \
                                  (zoom, latitude, longitude)
 
