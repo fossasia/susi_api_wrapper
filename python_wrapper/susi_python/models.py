@@ -129,7 +129,10 @@ class AudioAction(BaseAction):
         self.identifier = identifier
         self.identifier_type = identifier_type
 
-
+class VolumeAction(BaseAction):
+    def __init__(self, volume):
+        super().__init__()
+        self.volume = volume
 
 class Session:
     def __init__(self, identity):

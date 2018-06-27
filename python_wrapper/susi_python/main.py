@@ -79,6 +79,8 @@ def generate_result(response):
     for action in actions:
         if isinstance(action, AnswerAction):
             result['answer'] = action.expression
+        elif isinstance(action, VolumeAction):
+            result['volume'] = action.volume
         elif isinstance(action, AudioAction):
                 result['identifier'] = action.identifier
                 audio_url = result['identifier']  # bandit -s B605
