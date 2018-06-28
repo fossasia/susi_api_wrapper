@@ -91,9 +91,7 @@ def generate_result(response):
             result['answer'] = action.expression
         elif isinstance(action, AudioAction):
                 result['identifier'] = action.identifier
-                audio_url = result['identifier']  # bandit -s B605
-                os.system('play ' + audio_url[6:])  # nosec #pylint-disable type: ignore
-        elif isinstance(action, TableAction):  # pylint-enable
+        elif isinstance(action, TableAction):
             result['table'] = Table(action.columns, data)
         elif isinstance(action, MapAction):
             result['map'] = Map(action.longitude, action.latitude, action.zoom)
@@ -101,7 +99,9 @@ def generate_result(response):
             result['anchor'] = action
         elif isinstance(action, VideoAction):
             result['identifier'] = 'ytd-' + action.identifier
-        elif isinstance(action, RssAction): #pylint-enable
+        elif isinstance(action, VolumeAction):
+            result['volume'] = action.volume
+        elif isinstance(action, RssAction):
             entities = get_rss_entities(data)
             count = action.count
             result['rss'] = {'entities': entities, 'count': count}

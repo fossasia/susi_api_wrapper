@@ -18,6 +18,8 @@ def get_action(jsn):
         return StopAction()
     elif jsn['type'] == 'audio_play':
         return AudioAction(jsn['identifier'], jsn['identifier_type'])
+    elif jsn['type'] == 'audio_volume':
+        return VolumeAction(jsn['volume'])
     else:
         return UnknownAction()
 
