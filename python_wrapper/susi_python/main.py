@@ -106,6 +106,7 @@ def generate_result(response):
             count = action.count
             result['rss'] = {'entities': entities, 'count': count}
         elif isinstance(action, StopAction):
+            result['stop'] = action
             break
 
     return result
