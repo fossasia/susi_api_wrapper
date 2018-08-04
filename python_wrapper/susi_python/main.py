@@ -165,7 +165,6 @@ def add_device(access_token, speaker_name, room_name):
         'macid': macid,
         'name': name,
         'room': str(room_name),
-        'device': str(speaker_name),
         'latitude': curr_location.lat,
         'longitude': curr_location.lng,
         'access_token': access_token
