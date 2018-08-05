@@ -2,10 +2,8 @@ language: python
 python:
   - "3.6"
 install:
-  - pip install -U pytest
-  - pip install sox
-  - pip install -r python_wrapper/requirements.txt
+  - pip install -U pytest-runner
 script:
   # for Python API wrapper
   - cd python_wrapper
-  - python -m pytest tests/
+  - python setup.py pytest
