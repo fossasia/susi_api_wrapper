@@ -25,26 +25,37 @@ def get_action(jsn):
 
 
 def get_query_response(parsed_dict):
-    ans = parsed_dict['answers'][0]
-
-    data = [Datum(jsn)
-            for jsn in ans['data']]
-
-    metadata = Metadata(ans['metadata'])
-
-    actions = [get_action(jsn)
-               for jsn in ans['actions']]
-    print(actions[::-1])
-    answer = Answer(data, metadata, actions[::-1])
-
     try:
         identity_json = parsed_dict['session']['identity']
         identity = Identity(identity_json)
         session = Session(identity)
     except KeyError:
         session = None
+    if parsed_dict['answers']:
+        ans = parsed_dict['answers'][0]
+        
+        data = [Datum(jsn)
+                for jsn in ans['data']]
 
-    return QueryResponse(answer,parsed_dict, session)
+        metadata = Metadata(ans['metadata'])
+
+        actions = [get_action(jsn)
+                   for jsn in ans['actions']]
+        print(actions[::-1])
+
+        answer = Answer(data, metadata, actions[::-1])
+
+        return QueryResponse(answer,parsed_dict, session)
+    else:
+        data=[Datum({})]
+        metadata=Metadata({'count':0})
+
+        #Generate a temporary action dict in order to reply
+        temp_jsn={'language':'en','type':'answer','expression':"Hmm... I'm not sure if I understand you correctly."}
+        actions=[get_action(temp_jsn)]
+        answer = Answer(data, metadata, actions[::])
+
+        return QueryResponse(answer,parsed_dict, session)
 
 
 def get_sign_in_response(parsed_dict):
