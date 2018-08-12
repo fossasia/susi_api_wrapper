@@ -135,7 +135,7 @@ def get_rss_entities(data):
         entities.append(entity)
     return entities
 
-def add_device(access_token, speaker_name, room_name):
+def add_device(access_token, room_name):
 
     get_device_info = api_endpoint + '/aaa/listUserSettings.json?'
     add_device_url = api_endpoint + '/aaa/addNewDevice.json?'
@@ -178,7 +178,7 @@ def add_device(access_token, speaker_name, room_name):
                 adding_device = requests.post(add_device_url, params2)
                 print(adding_device.url)
 
-def sign_in(email, password, speaker_name=None, room_name=None):
+def sign_in(email, password, room_name=None):
     global access_token
     params = {
         'login': email,
@@ -193,7 +193,7 @@ def sign_in(email, password, speaker_name=None, room_name=None):
         access_token = parsed_response.access_token
         # print(access_token)
         if access_token is not None:
-            add_device(access_token, speaker_name, room_name)
+            add_device(access_token, room_name)
     else:
         access_token = None
 
