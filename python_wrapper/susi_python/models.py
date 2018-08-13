@@ -136,6 +136,10 @@ class AudioAction(BaseAction):
         self.identifier = identifier
         self.identifier_type = identifier_type
 
+class VolumeAction(BaseAction):
+    def __init__(self , volume):
+        super().__init__()
+        self.volume = volume
 
 class Session:
     def __init__(self, identity):
@@ -174,7 +178,7 @@ class Map:
     def __init__(self, longitude, latitude, zoom = None):
         self.longitude = longitude
         self.latitude = latitude
-        if(zoom is None):
+        if zoom is None:
             self.zoom = 13
         else:
             self.zoom = zoom

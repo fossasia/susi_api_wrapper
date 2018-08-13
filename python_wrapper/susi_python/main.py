@@ -1,5 +1,5 @@
 import json
-
+import geocoder
 import requests
 import time
 import os
@@ -91,9 +91,7 @@ def generate_result(response):
             result['answer'] = action.expression
         elif isinstance(action, AudioAction):
                 result['identifier'] = action.identifier
-                audio_url = result['identifier']  # bandit -s B605
-                os.system('play ' + audio_url[6:])  # nosec #pylint-disable type: ignore
-        elif isinstance(action, TableAction):  # pylint-enable
+        elif isinstance(action, TableAction):
             result['table'] = Table(action.columns, data)
         elif isinstance(action, MapAction):
             result['map'] = Map(action.longitude, action.latitude, action.zoom)
@@ -101,11 +99,14 @@ def generate_result(response):
             result['anchor'] = action
         elif isinstance(action, VideoAction):
             result['identifier'] = 'ytd-' + action.identifier
-        elif isinstance(action, RssAction): #pylint-enable
+        elif isinstance(action, VolumeAction):
+            result['volume'] = action.volume
+        elif isinstance(action, RssAction):
             entities = get_rss_entities(data)
             count = action.count
             result['rss'] = {'entities': entities, 'count': count}
         elif isinstance(action, StopAction):
+            result['stop'] = action
             break
 
     return result
@@ -134,7 +135,7 @@ def get_rss_entities(data):
         entities.append(entity)
     return entities
 
-def add_device(access_token):
+def add_device(access_token, room_name):
 
     get_device_info = api_endpoint + '/aaa/listUserSettings.json?'
     add_device_url = api_endpoint + '/aaa/addNewDevice.json?'
@@ -159,10 +160,13 @@ def add_device(access_token):
         session = device_info['session'] # session info
         identity = session['identity']
         name = identity['name']
+        curr_location = geocoder.ip('me')
         params2 = {
         'macid': macid,
         'name': name,
-        'device': 'Smart Speaker',
+        'room': str(room_name),
+        'latitude': curr_location.lat,
+        'longitude': curr_location.lng,
         'access_token': access_token
         }
 
@@ -174,7 +178,7 @@ def add_device(access_token):
                 adding_device = requests.post(add_device_url, params2)
                 print(adding_device.url)
 
-def sign_in(email, password):
+def sign_in(email, password, room_name=None):
     global access_token
     params = {
         'login': email,
@@ -189,7 +193,7 @@ def sign_in(email, password):
         access_token = parsed_response.access_token
         # print(access_token)
         if access_token is not None:
-            add_device(access_token)
+            add_device(access_token, room_name)
     else:
         access_token = None
 
