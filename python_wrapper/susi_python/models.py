@@ -96,7 +96,7 @@ class TableAction(BaseAction):
 
 
 class MapAction(BaseAction):
-    def __init__(self, latitude, longitude, zoom = None):
+    def __init__(self, latitude, longitude, zoom=None):
         super().__init__()
         self.latitude = latitude
         self.longitude = longitude
@@ -175,7 +175,7 @@ class Table:
 
 
 class Map:
-    def __init__(self, longitude, latitude, zoom = None):
+    def __init__(self, longitude, latitude, zoom=None):
         self.longitude = longitude
         self.latitude = latitude
         if zoom is None:
