@@ -96,11 +96,11 @@ class TableAction(BaseAction):
 
 
 class MapAction(BaseAction):
-    def __init__(self, latitude, longitude, zoom= None):
+    def __init__(self, latitude, longitude, zoom = None):
         super().__init__()
         self.latitude = latitude
         self.longitude = longitude
-        if(zoom is None):
+        if zoom is None:
             self.zoom = 13
         else:
             self.zoom = zoom
