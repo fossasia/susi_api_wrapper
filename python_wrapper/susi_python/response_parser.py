@@ -20,6 +20,12 @@ def get_action(jsn):
         return AudioAction(jsn['identifier'], jsn['identifier_type'])
     elif jsn['type'] == 'audio_volume':
         return VolumeAction(jsn['volume'])
+    elif jsn['type'] == 'pause':
+        return MediaAction(jsn['type'])
+    elif jsn['type'] == 'restart':
+        return MediaAction(jsn['type'])
+    elif jsn['type'] == 'resume':
+        return MediaAction(jsn['type'])
     else:
         return UnknownAction()
 
