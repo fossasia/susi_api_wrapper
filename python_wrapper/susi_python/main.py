@@ -108,7 +108,7 @@ def generate_result(response):
         elif isinstance(action, StopAction):
             result['stop'] = action
             break
-        elif isinstance(action,MediaAction):
+        elif isinstance(action, MediaAction):
             result['media_action'] = action.type
 
     return result
