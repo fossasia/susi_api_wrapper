@@ -90,7 +90,7 @@ def generate_result(response):
             print(action)
             result['answer'] = action.expression
         elif isinstance(action, AudioAction):
-                result['identifier'] = action.identifier
+            result['identifier'] = action.identifier
         elif isinstance(action, TableAction):
             result['table'] = Table(action.columns, data)
         elif isinstance(action, MapAction):
@@ -108,6 +108,8 @@ def generate_result(response):
         elif isinstance(action, StopAction):
             result['stop'] = action
             break
+        elif isinstance(action, MediaAction):
+            result['media_action'] = action.type
 
     return result
 
