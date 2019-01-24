@@ -16,7 +16,7 @@ def sign_up(email, password):
 
     # message from server
     message = response.message
-    print('Server''s Message:' + message)
+    print("Server's Message:" + message)
 
 
 def get_old_conversations():
