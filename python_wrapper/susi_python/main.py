@@ -7,7 +7,7 @@ import os
 from .response_parser import *
 from uuid import getnode as get_mac
 
-api_endpoint = 'http://api.susi.ai'
+api_endpoint = 'https://api.susi.ai'
 
 access_token = None
 location = {'latitude': None, 'longitude': None, 'country_name': None, 'country_code': None}
