@@ -6,6 +6,8 @@ import os
 
 from .response_parser import *
 from uuid import getnode as get_mac
+from requests import ConnectionError
+from requests_futures.sessions import FuturesSession
 
 api_endpoint = 'https://api.susi.ai'
 
@@ -18,17 +20,23 @@ def check_local_server():
         'q': 'Hello',
         'timezoneOffset': int(time.timezone / 60)
     }
-    try:
-        chat_url = 'http://localhost:4000/susi/chat.json'
-        if (requests.get(chat_url, test_params)):
-            print('connected to local server')
+    
+    session = FuturesSession()
+    check_local_server()	    
+    response_one = None
+    while response_one is None:
+        try:
+            response_one = session.get('https://127.0.0.1:4000/susi/chat.json?q={}&timezoneOffset={}'
+            .format(test_params.q, test_params.timezoneOffset) ).result()
             global api_endpoint
-            api_endpoint = 'http://localhost:4000'
-    except requests.exceptions.ConnectionError:
-        print('local server is down')
+            api_endpoint = 'https://127.0.0.1:4000'
+        except AttributeError:
+            time.sleep(10)
+            continue
+        except ConnectionError:
+            time.sleep(10)
+            continue
 
-
-check_local_server()
 
 
 def use_api_endpoint(url):
