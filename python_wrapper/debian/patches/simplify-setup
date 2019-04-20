@@ -1,0 +1,29 @@
+---
+ setup.py |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+--- python_wrapper.orig/setup.py
++++ python_wrapper/setup.py
+@@ -1,5 +1,9 @@
+ from setuptools import setup
+ 
++def readme():
++    with open('README.md') as f:
++        return f.read()
++
+ setup(
+     name='susi_python',
+     version="0.0.1",
+@@ -7,11 +11,9 @@ setup(
+     author_email='susiai@googlegroups.com',
+     url='http://susi.ai',
+     description='SUSI AI API Python Wrapper',
+-    long_description_markdown_filename='README.md',
++    long_description=readme(),
+     license='Apache',
+     packages=['susi_python'],
+-    install_requires=['requests', 'youtube-dl', 'geocoder'],
+-    setup_requires=["setuptools-markdown"],
+     classifiers=[
+         "Development Status :: 4 - Beta",
+         "License :: OSI Approved :: Apache License",

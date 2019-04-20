@@ -1,0 +1,19 @@
+Source: susi-python
+Section: misc
+Priority: optional
+Maintainer: SUSI.AI Packaging Team <norbert@preining.info>
+Build-Depends: debhelper (>= 12),
+               dh-python,
+               python3-all-dev,
+               python3-setuptools,
+               python3-pkgconfig
+Standards-Version: 4.2.1
+Homepage: https://dev.susi.ai/
+Vcs-Git: https://github.com/fossasia/susi_linux.git
+Vcs-Browser: https://github.com/fossasia/susi_linux
+
+Package: susi-python
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${python3:Depends}
+Description: SUSI.AI Recognition Engine
+ Some intelligent explanation
